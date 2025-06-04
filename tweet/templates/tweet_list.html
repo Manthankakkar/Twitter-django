@@ -1,0 +1,35 @@
+{%extends 'layout.html'%}
+{%block title%}
+twitter
+{%endblock%}
+{%block content%}
+<h1 class="text-center ">Twitter</h1>
+<a class="btn btn-primary" href="{%url 'tweet_create'%}"> create a new tweet </a>
+<div class="container row gap-3">
+    {% for tweet in tweets %}
+    <div class="card" style="width: 18rem;">
+        
+        {% if tweet.photo %}
+        <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Photo">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{tweet.user.username}}</h5>
+            <p class="card-text">{{tweet.text}}</p>
+            {% if user.is_authenticated and user == tweet.user %}
+            <a href="{%url 'tweet_edit' tweet.id%}" class="btn btn-primary">Edit</a>
+            <a href="{%url 'tweet_delete' tweet.id%}" class="btn btn-danger">Delete</a>
+            {%endif%}
+            
+        </div>
+    </div>
+    {%endfor%}
+</div>
+ <div class="d-flex justify-content-center align-items-center flex-column my-3">
+{% if user.is_authenticated %}
+       <form method="POST" action="{% url 'logout' %}">
+           {% csrf_token %}
+           <button class="btn btn-outline-danger"  text-center type="submit">Logout</button>
+       </form>
+   {% endif %}
+   </div>
+{%endblock%}
